@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -89,6 +90,30 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a>
+        <Link
+          href="/search/client"
+          className={styles.card}
+          rel="noopener noreferrer"
+        >
+          <h2>Client</h2>
+          <p>Search and Find movie metadata on the client side</p>
+        </Link>
+        <Link
+          href="/search/server"
+          className={styles.card}
+          rel="noopener noreferrer"
+        >
+          <h2>Server</h2>
+          <p>Search and Find movie metadata on the server side</p>
+        </Link>
+        <Link
+          href="/search/route"
+          className={styles.card}
+          rel="noopener noreferrer"
+        >
+          <h2>Route</h2>
+          <p>Search and Find movie metadata on the route side</p>
+        </Link>
       </div>
     </main>
   );
