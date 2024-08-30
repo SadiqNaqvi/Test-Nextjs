@@ -106,14 +106,6 @@ export default function Home() {
           <h2>Server</h2>
           <p>Search and Find movie metadata on the server side</p>
         </Link>
-        <Link
-          href="/search/route"
-          className={styles.card}
-          rel="noopener noreferrer"
-        >
-          <h2>Route</h2>
-          <p>Search and Find movie metadata on the route side</p>
-        </Link>
       </div>
     </main>
   );
