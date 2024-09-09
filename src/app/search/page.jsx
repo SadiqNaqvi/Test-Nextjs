@@ -1,5 +1,3 @@
-import MovieCard from "@/Components/MovieCard";
-
 export default async function SearchPage() {
 
     // process.env.NODE_ENV -- output : development | production
@@ -10,17 +8,18 @@ export default async function SearchPage() {
     console.log("Mode: " + process.env.NODE_ENV);
     console.log("Host: " + process.env.__NEXT_PRIVATE_ORIGIN);
 
-    const res = await fetch(`https://test-next-js-application.vercel.app/api/search`);
-    const resp = await res.json();
+    // const res = await fetch(`https://test-next-js-application.vercel.app/api/search`);
+    // const resp = await res.json();
 
-    if (!resp.success)
-        return <div>Error : {resp.data}</div>
+    // if (!resp.success)
+    //     return <div>Error : {resp.data}</div>
 
     return (
         <div className="movieDataPage">
-            {resp.data.results.map(el => (
+            Search Page
+            {/* {resp.data.results.map(el => (
                 <MovieCard key={el.id} title={el.title} image={el.poster_path} id={el.id} />
-            ))}
+            ))} */}
         </div>
     )
 
