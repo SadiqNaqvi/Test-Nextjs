@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-export default function page() {
+export default function SearchPage() {
     const [title, setTitle] = useState('');
     const [text, setText] = useState('');
     const [error, setError] = useState('');
