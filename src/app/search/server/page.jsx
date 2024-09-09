@@ -12,7 +12,7 @@ const fetchData = async () => {
     };
     try {
         const res = await fetch(url, options);
-        const resp = await res.text();
+        const resp = await res.json();
         return { success: true, response: resp }
     }
     catch (err) {
@@ -24,6 +24,7 @@ const fetchData = async () => {
 const Component = async () => {
     const data = await fetchData();
     if (!data.success) return <div>No data found! Error: {data.response}</div>
+
     return <div className="movieDataPage">
         {data.response.results.map(el => (
             <MovieCard key={el.id} title={el.title} id={el.id} image={el.poster_path} />
