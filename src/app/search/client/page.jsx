@@ -1,4 +1,5 @@
 "use client"
+import MovieCard from "@/Components/MovieCard";
 import { useState } from "react";
 
 export default function ClientPage() {
@@ -16,12 +17,17 @@ export default function ClientPage() {
     };
 
     fetch(url, options)
-        .then(res => res.text())
-        .then(json => setData(json))
+        .then(res => res.json())
+        .then(json => setData(json) )
         .catch(err => { console.table('error: ' + err); setError(err.message) })
         .finally(() => setLoading(false))
 
     if (loading) return <div>Loading...</div>
     if (!loading && !data) return <div>No Data Found! Error: {error}</div>
-    return <div>{data}</div>
+    return <div className="movieDataPage">
+        {/* {data} */}
+        {data.results.map(el => (
+            <MovieCard id={el.id} image={el.poster_path} title={el.title} key={el.id} />
+        ))}
+    </div>
 }

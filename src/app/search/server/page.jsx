@@ -1,3 +1,4 @@
+import MovieCard from "@/Components/MovieCard";
 import { Suspense } from "react";
 
 const fetchData = async () => {
@@ -23,7 +24,11 @@ const fetchData = async () => {
 const Component = async () => {
     const data = await fetchData();
     if (!data.success) return <div>No data found! Error: {data.response}</div>
-    return <div>{data.response}</div>
+    return <div className="movieDataPage">
+        {data.response.results.map(el => (
+            <MovieCard key={el.id} title={el.title} id={el.id} image={el.poster_path} />
+        ))}
+    </div>
 }
 
 export default function ServerPage() {

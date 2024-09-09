@@ -90,6 +90,10 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a>
+        <Link href="/search" className={styles.card} rel="noopener noreferrer">
+          <h2>Search</h2>
+          <p>Search and Find movie metadata</p>
+        </Link>
         <Link
           href="/search/client"
           className={styles.card}
@@ -105,6 +109,14 @@ export default function Home() {
         >
           <h2>Server</h2>
           <p>Search and Find movie metadata on the server side</p>
+        </Link>
+        <Link
+          href="/activity"
+          className={styles.card}
+          rel="noopener noreferrer"
+        >
+          <h2>Activity</h2>
+          <p>Do some activity on the client side</p>
         </Link>
       </div>
     </main>
