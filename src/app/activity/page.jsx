@@ -9,7 +9,7 @@ export default function SearchPage() {
 
     useEffect(() => {
         console.log(process.env.NEXT_PUBLIC_APIKEY);
-        fetch('https://testlalaapp.vercel.app/api/collection')
+        fetch('https://testlalaapp.vercel.app/api/collection?id=448150')
             .then((res) => res.json())
             .then(json => console.log(json))
             .catch(err => console.error(err.message));
