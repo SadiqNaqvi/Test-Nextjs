@@ -1,6 +1,7 @@
 export const GET = async (req) => {
   const params = req.nextUrl.searchParams;
   const collection_id = params.get("id");
+  if (!collection_id) return new Error("Invalid Collection id");
   const url = `https://api.themoviedb.org/3/collection/${collection_id}?language=en-US`;
   const options = {
     method: "GET",
