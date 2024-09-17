@@ -10,7 +10,7 @@ export const GET = async (req) => {
       })
     );
 
-  const url = `http://img.omdbapi.com/?apikey=${process.env.OMDB_API}&i=${id}&plot=full`;
+  const url = `http://www.omdbapi.com/?apikey=${process.env.OMDB_API}&i=${id}&plot=full`;
 
   try {
     const data = await (await fetch(url)).json();
