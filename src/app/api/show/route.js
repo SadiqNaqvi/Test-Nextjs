@@ -6,11 +6,11 @@ export const GET = async (req) => {
     return new Response(
       JSON.stringify({
         status: false,
-        response: "Invalid Collection Id!",
+        response: "Invalid Show Id!",
       })
     );
 
-  const url = `https://api.themoviedb.org/3/collection/${id}?language=en-US`;
+  const url = `https://api.themoviedb.org/3/tv/${id}?append_to_response=aggregate_credits%2Cvideos&language=en-US`;
   const options = {
     method: "GET",
     headers: {
@@ -24,7 +24,7 @@ export const GET = async (req) => {
 
     if (data.status_message)
       return new Response(
-        JSON.stringify({ status: false, response: data.status_message })
+        JSON.stringify({ status: false, response: status_message })
       );
 
     return new Response(JSON.stringify({ status: true, response: data }));

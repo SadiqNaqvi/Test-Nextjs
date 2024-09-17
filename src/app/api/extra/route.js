@@ -6,25 +6,18 @@ export const GET = async (req) => {
     return new Response(
       JSON.stringify({
         status: false,
-        response: "Invalid Collection Id!",
+        response: "Invalid IMDB Id!",
       })
     );
 
-  const url = `https://api.themoviedb.org/3/collection/${id}?language=en-US`;
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${process.env.TMDB_API}`,
-    },
-  };
+  const url = `http://img.omdbapi.com/?apikey=${process.env.OMDB_API}&i=${id}&plot=full`;
 
   try {
-    const data = await (await fetch(url, options)).json();
+    const data = await (await fetch(url)).json();
 
-    if (data.status_message)
+    if (!data.Response)
       return new Response(
-        JSON.stringify({ status: false, response: data.status_message })
+        JSON.stringify({ status: false, response: data.Error })
       );
 
     return new Response(JSON.stringify({ status: true, response: data }));

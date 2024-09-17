@@ -1,16 +1,16 @@
+import { show_sort_obj as sortObj } from "@/utils/Data";
+
 export const GET = async (req) => {
   const params = req.nextUrl.searchParams;
-  const id = params.get("id");
+  const sort = params.get("sort") || "popularity";
+  const sort_by = sortObj[sort] || sortObj.popularity;
+  const page = params.get("p") || 1;
+  const year = params.get("y");
+  const genres = params.get("g");
 
-  if (!id)
-    return new Response(
-      JSON.stringify({
-        status: false,
-        response: "Invalid Collection Id!",
-      })
-    );
-
-  const url = `https://api.themoviedb.org/3/collection/${id}?language=en-US`;
+  const url = `https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sort_by}
+    ${year ? `&first_air_date_year=${year}` : ""}
+    ${genres ? `&with_genres=${genres}` : ""}`;
   const options = {
     method: "GET",
     headers: {

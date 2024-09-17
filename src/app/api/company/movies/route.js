@@ -1,16 +1,21 @@
+import { movie_sort_obj as sortObj } from "@/utils/Data";
+
 export const GET = async (req) => {
   const params = req.nextUrl.searchParams;
   const id = params.get("id");
+  const sort = params.get("sort") || "popularity";
+  const sort_by = sortObj[sort] || sortObj.popularity;
+  const page = params.get("p") || 1;
 
   if (!id)
     return new Response(
       JSON.stringify({
         status: false,
-        response: "Invalid Collection Id!",
+        response: "Invalid Company Id!",
       })
     );
 
-  const url = `https://api.themoviedb.org/3/collection/${id}?language=en-US`;
+  const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${sort_by}&with_companies=${id}`;
   const options = {
     method: "GET",
     headers: {

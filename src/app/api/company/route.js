@@ -3,14 +3,12 @@ export const GET = async (req) => {
   const id = params.get("id");
 
   if (!id)
-    return new Response(
-      JSON.stringify({
-        status: false,
-        response: "Invalid Collection Id!",
-      })
-    );
+    return new Response(JSON.stringify({
+      status: false,
+      response: "Invalid Company Id!",
+    }));
 
-  const url = `https://api.themoviedb.org/3/collection/${id}?language=en-US`;
+  const url = `https://api.themoviedb.org/3/company/${id}`;
   const options = {
     method: "GET",
     headers: {

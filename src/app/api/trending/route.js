@@ -1,16 +1,10 @@
 export const GET = async (req) => {
   const params = req.nextUrl.searchParams;
-  const id = params.get("id");
 
-  if (!id)
-    return new Response(
-      JSON.stringify({
-        status: false,
-        response: "Invalid Collection Id!",
-      })
-    );
+  const page = params.get("p") || 1;
+  const type = params.get("t") || "all"; // movie | person | tv | all
 
-  const url = `https://api.themoviedb.org/3/collection/${id}?language=en-US`;
+  const url = `https://api.themoviedb.org/3/trending/${type}/week?language=en-US&page=${page}`;
   const options = {
     method: "GET",
     headers: {
@@ -24,7 +18,7 @@ export const GET = async (req) => {
 
     if (data.status_message)
       return new Response(
-        JSON.stringify({ status: false, response: data.status_message })
+        JSON.stringify({ status: false, response: status_message })
       );
 
     return new Response(JSON.stringify({ status: true, response: data }));

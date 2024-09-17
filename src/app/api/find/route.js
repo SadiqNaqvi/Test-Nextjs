@@ -6,11 +6,11 @@ export const GET = async (req) => {
     return new Response(
       JSON.stringify({
         status: false,
-        response: "Invalid Collection Id!",
+        response: "Invalid IMDB Id!",
       })
     );
 
-  const url = `https://api.themoviedb.org/3/collection/${id}?language=en-US`;
+  const url = `https://api.themoviedb.org/3/find/${id}?external_source=id`;
   const options = {
     method: "GET",
     headers: {
