@@ -15,7 +15,7 @@ export const GET = async (req) => {
   try {
     const data = await (await fetch(url)).json();
 
-    if (!data.Response)
+    if (data.Response === "False")
       return new Response(
         JSON.stringify({ status: false, response: data.Error })
       );
