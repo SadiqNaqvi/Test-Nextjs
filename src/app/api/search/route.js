@@ -12,7 +12,7 @@ export const GET = async (req) => {
       })
     );
 
-  const url = `https://api.themoviedb.org/3/search/${type}?query=${query}&include_adult=true&language=en-US&page=${page}`;
+  const url = `https://api.themoviedb.org/3/search/${type}?query=${query}&include_adult=false&language=en-US&page=${page}`;
   const options = {
     method: "GET",
     headers: {
