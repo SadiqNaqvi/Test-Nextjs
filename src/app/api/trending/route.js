@@ -18,7 +18,7 @@ export const GET = async (req) => {
 
     if (data.status_message)
       return new Response(
-        JSON.stringify({ status: false, response: status_message })
+        JSON.stringify({ status: false, response: data.status_message })
       );
 
     return new Response(JSON.stringify({ status: true, response: data }));
