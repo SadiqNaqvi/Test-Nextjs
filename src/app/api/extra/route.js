@@ -1,8 +1,9 @@
 export const GET = async (req) => {
   const params = req.nextUrl.searchParams;
-  const id = params.get("id");
+  const t = params.get("t");
+  const y = params.get("y");
 
-  if (!id)
+  if (!t || !y)
     return new Response(
       JSON.stringify({
         status: false,
@@ -10,7 +11,7 @@ export const GET = async (req) => {
       })
     );
 
-  const url = `http://www.omdbapi.com/?apikey=${process.env.OMDB_API}&i=${id}&plot=full`;
+  const url = `http://www.omdbapi.com/?apikey=${process.env.OMDB_API}&t=${t}&y=${y}&plot=full`;
 
   try {
     const data = await (await fetch(url)).json();
