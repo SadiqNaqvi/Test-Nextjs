@@ -7,11 +7,11 @@ export const GET = async (req) => {
     return new Response(
       JSON.stringify({
         status: false,
-        response: "Invalid Show Id!",
+        response: "Invalid Movie Id!",
       })
     );
 
-  const url = `https://api.themoviedb.org/3/tv/${id}/recommendations?language=en-US&page=${page}`;
+  const url = `https://api.themoviedb.org/3/movie/${id}/videos?language=en-US&page=${page}`;
   const options = {
     method: "GET",
     headers: {

@@ -11,7 +11,7 @@ export const GET = async (req) => {
       })
     );
 
-  const url = `https://api.themoviedb.org/3/movie/${id}/recommendations?language=en-US&page=${page}`;
+  const url = `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=${page}`;
   const options = {
     method: "GET",
     headers: {
