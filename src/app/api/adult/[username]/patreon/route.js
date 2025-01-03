@@ -1,9 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export const GET = async (
-  res: NextRequest,
-  { params: { username } }: { params: { username: string } }
-) => {
+export const GET = async (res, { params: { username } }) => {
   const page = res.nextUrl.searchParams.get("o");
 
   try {
@@ -23,7 +20,7 @@ export const GET = async (
       success: true,
       error: null,
     });
-  } catch (err: any) {
+  } catch (err) {
     return NextResponse.json({
       result: null,
       success: false,
