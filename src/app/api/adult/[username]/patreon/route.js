@@ -6,7 +6,7 @@ export const GET = async (res, { params: { username } }) => {
   try {
     const response = await fetch(
       `https://kemono.su/api/v1/patreon/user/${username}/posts-legacy?o=${page}`,
-      { next: { revalidate: 60 * 60 * 24 } }
+      { next: { revalidate: 0 } }
     ).then((res) => res.json());
 
     if (response.error)
