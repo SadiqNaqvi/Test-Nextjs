@@ -11,10 +11,10 @@ export const GET = async (req) => {
   if (!id)
     return NextResponse.json({
       status: false,
-      response: "Invalid Company Id!",
+      response: "Invalid Network Id!",
     });
 
-  const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${sort_by}&with_companies=${id}`;
+  const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&language=en-US&page=${page}&sort_by=${sort_by}&with_watch_providers=${id}`;
   const options = {
     method: "GET",
     headers: {
@@ -24,7 +24,7 @@ export const GET = async (req) => {
   };
 
   try {
-    const data = await fetch(url, options).then((r) => r.json());
+    const data = await (await fetch(url, options)).json();
 
     if (data.status_message)
       return NextResponse.json({

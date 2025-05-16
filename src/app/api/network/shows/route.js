@@ -1,4 +1,5 @@
 import { show_sort_obj as sortObj } from "@/utils/Data";
+import { NextResponse } from "next/server";
 
 export const GET = async (req) => {
   const params = req.nextUrl.searchParams;
@@ -8,12 +9,10 @@ export const GET = async (req) => {
   const page = params.get("p") || 1;
 
   if (!id)
-    return new Response(
-      JSON.stringify({
-        status: false,
-        response: "Invalid Network Id!",
-      })
-    );
+    return NextResponse.json({
+      status: false,
+      response: "Invalid Network Id!",
+    });
 
   const url = `https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sort_by}&with_networks=${id}`;
   const options = {
@@ -28,15 +27,14 @@ export const GET = async (req) => {
     const data = await (await fetch(url, options)).json();
 
     if (data.status_message)
-      return new Response(
-        JSON.stringify({ status: false, response: data.status_message })
-      );
+      return NextResponse.json({
+        status: false,
+        response: data.status_message,
+      });
 
-    return new Response(JSON.stringify({ status: true, response: data }));
+    return NextResponse.json({ status: true, response: data });
   } catch (err) {
     console.error(err);
-    return new Response(
-      JSON.stringify({ status: false, response: err.message })
-    );
+    return NextResponse.json({ status: false, response: err.message });
   }
 };

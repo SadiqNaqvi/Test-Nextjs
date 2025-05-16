@@ -1,7 +1,7 @@
-import { movie_sort_obj as sortObj } from "@/utils/Data";
-import { NextResponse } from "next/server";
+import { show_sort_obj as sortObj } from "@/utils/Data";
+import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req) => {
+export const GET = async (req: NextRequest) => {
   const params = req.nextUrl.searchParams;
   const id = params.get("id");
   const sort = params.get("sort") || "popularity";
@@ -14,7 +14,7 @@ export const GET = async (req) => {
       response: "Invalid Company Id!",
     });
 
-  const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${sort_by}&with_companies=${id}`;
+  const url = `https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=false&include_video=false&language=en-US&page=${page}&sort_by=${sort_by}&with_companies=${id}`;
   const options = {
     method: "GET",
     headers: {
