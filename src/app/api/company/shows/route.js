@@ -1,7 +1,7 @@
 import { show_sort_obj as sortObj } from "@/utils/Data";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest) => {
+export const GET = async (req) => {
   const params = req.nextUrl.searchParams;
   const id = params.get("id");
   const sort = params.get("sort") || "popularity";
