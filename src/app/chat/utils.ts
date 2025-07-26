@@ -2,7 +2,7 @@ import Ably, { Realtime, Rest } from "ably";
 
 let ably_realtime: Realtime | null = null;
 let ably_rest: Rest | null = null;
-let ably_client: RealTime | null = null;
+let ably_client: Realtime | null = null;
 
 export const getAblyRealtime = () => {
   if (!ably_realtime)
