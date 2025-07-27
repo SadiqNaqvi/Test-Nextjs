@@ -14,11 +14,15 @@ const ChatComponent = ({ client_id }: { client_id: string }) => {
 
     const showMessage = (message: { text: string, metadata: payload }) => {
         const { text, metadata } = message;
-        // console.log(text);
+
         const { id, status, sender, type } = metadata as Message;
+
         if (type === "notification" && sender === client_id) return;
+
         setMessages((prev) => {
+
             const prevMessage = prev.filter(el => el.id !== id);
+
             return [...prevMessage, { id, status, sender, message: text, type }];
         });
     }
@@ -42,7 +46,7 @@ const ChatComponent = ({ client_id }: { client_id: string }) => {
         }));
 
         channel.presence.subscribe("leave", ({ data }: any) => showMessage({
-            text: `${data.sender} left the chat`,
+            text: `${data.sender} left the chat with ${messages.length} messages`,
             metadata: { id: Date.now().toString(36), sender: data.sender, status: "sent", type: "notification" }
         }));
 
@@ -51,29 +55,29 @@ const ChatComponent = ({ client_id }: { client_id: string }) => {
         return leaveRoom;
     }, [channel]);
 
-    // useEffect(() => {
-    //     const pageHide = () => sendMessage({ message: `${client_id} page hide` }, "notification")
-    //     window.addEventListener("pagehide", pageHide);
+    useEffect(() => {
+        const pageHide = () => sendMessage({ message: `${client_id} page hide` }, "notification")
+        window.addEventListener("pagehide", pageHide);
 
-    //     const pageshow = () => sendMessage({ message: `${client_id} page show` }, "notification")
-    //     window.addEventListener("pageshow", pageshow);
+        const pageshow = () => sendMessage({ message: `${client_id} page show` }, "notification")
+        window.addEventListener("pageshow", pageshow);
 
-    //     const pageblur = () => sendMessage({ message: `${client_id} page blur` }, "notification")
-    //     window.addEventListener("blur", pageblur);
+        const pageblur = () => sendMessage({ message: `${client_id} page blur` }, "notification")
+        window.addEventListener("blur", pageblur);
 
-    //     const beforeunload = () => sendMessage({ message: `${client_id} before upload` }, "notification")
-    //     window.addEventListener("beforeunload", beforeunload);
+        const beforeunload = () => sendMessage({ message: `${client_id} before upload` }, "notification")
+        window.addEventListener("beforeunload", beforeunload);
 
-    //     const visibilityChange = () => sendMessage({ message: `${client_id} visibility changed` }, "notification")
-    //     document.addEventListener("visibilitychange", visibilityChange);
-    //     return () => {
-    //         window.removeEventListener("pagehide", pageHide);
-    //         window.removeEventListener("pageshow", pageshow);
-    //         window.removeEventListener("blur", pageblur);
-    //         window.removeEventListener("beforeunload", beforeunload);
-    //         document.removeEventListener("visibilitychange", visibilityChange);
-    //     }
-    // }, []);
+        const visibilityChange = () => sendMessage({ message: `${client_id} visibility changed` }, "notification")
+        document.addEventListener("visibilitychange", visibilityChange);
+        return () => {
+            window.removeEventListener("pagehide", pageHide);
+            window.removeEventListener("pageshow", pageshow);
+            window.removeEventListener("blur", pageblur);
+            window.removeEventListener("beforeunload", beforeunload);
+            document.removeEventListener("visibilitychange", visibilityChange);
+        }
+    }, []);
 
     const sendMessage = async (data: { message: string }, type?: "notification" | "message") => {
         const { message } = data;
@@ -85,11 +89,11 @@ const ChatComponent = ({ client_id }: { client_id: string }) => {
             type: type ?? "message",
         }
 
-        setMessages([...messages, { message, ...metadata }]);
+        if (type !== "notification") setMessages([...messages, { message, ...metadata }]);
         try {
             await channel.publish('test-message', { text: message, metadata: { ...metadata, status: "sent" } });
         } catch (err: any) {
-            console.log(err);
+
         }
     }
 
