@@ -37,5 +37,5 @@ yarn-error.log*
 next-env.d.ts
 
 # testing files
-scrapper.js
-aiscrapper.js
+*.ignore.js
+*.ignore.ts

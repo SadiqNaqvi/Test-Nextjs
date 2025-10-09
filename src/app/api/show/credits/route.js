@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+
 export const GET = async (req) => {
   const params = req.nextUrl.searchParams;
   const id = params.get("id");
@@ -23,15 +25,11 @@ export const GET = async (req) => {
     const data = await (await fetch(url, options)).json();
 
     if (data.status_message)
-      return new Response(
-        JSON.stringify({ status: false, response: data.status_message })
-      );
+      return NextResponse.json({ status: false, response: data.status_message})
 
-    return new Response(JSON.stringify({ status: true, response: data }));
+    return NextResponse.json({ status: true, response: data })
   } catch (err) {
     console.error(err);
-    return new Response(
-      JSON.stringify({ status: false, response: err.message })
-    );
+    return NextResponse.json({ status: false, response: err.message })
   }
 };

@@ -1,12 +1,10 @@
-import { show_sort_obj as sortObj } from "@/utils/Data";
+import { refineCompanyData } from "@lib/refiner";
+import { FullCompanyDetails, GeneralTMDBResponse } from "@type/external";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req) => {
+export const GET = async (req: NextRequest) => {
   const params = req.nextUrl.searchParams;
   const id = params.get("id");
-  const sort = params.get("sort") || "popularity";
-  const sort_by = sortObj[sort] || sortObj.popularity;
-  const page = params.get("p") || 1;
 
   if (!id)
     return NextResponse.json({
@@ -14,7 +12,7 @@ export const GET = async (req) => {
       response: "Invalid Company Id!",
     });
 
-  const url = `https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=false&include_video=false&language=en-US&page=${page}&sort_by=${sort_by}&with_companies=${id}`;
+  const url = `https://api.themoviedb.org/3/company/${id}`;
   const options = {
     method: "GET",
     headers: {
@@ -24,7 +22,10 @@ export const GET = async (req) => {
   };
 
   try {
-    const data = await fetch(url, options).then((r) => r.json());
+    const data: GeneralTMDBResponse<FullCompanyDetails> = await fetch(
+      url,
+      options
+    ).then((res) => res.json());
 
     if (data.status_message)
       return NextResponse.json({
@@ -32,8 +33,11 @@ export const GET = async (req) => {
         response: data.status_message,
       });
 
-    return NextResponse.json({ status: true, response: data });
-  } catch (err) {
+    return NextResponse.json({
+      status: true,
+      response: refineCompanyData(data.response),
+    });
+  } catch (err: any) {
     console.error(err);
     return NextResponse.json({ status: false, response: err.message });
   }

@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+
 export const GET = async (req) => {
   const params = req.nextUrl.searchParams;
   const t = params.get("t");
@@ -21,11 +23,9 @@ export const GET = async (req) => {
         JSON.stringify({ status: false, response: data.Error })
       );
 
-    return new Response(JSON.stringify({ status: true, response: data }));
+    return NextResponse.json({ status: true, response: data })
   } catch (err) {
     console.error(err);
-    return new Response(
-      JSON.stringify({ status: false, response: err.message })
-    );
+    return NextResponse.json({ status: false, response: err.message })
   }
 };

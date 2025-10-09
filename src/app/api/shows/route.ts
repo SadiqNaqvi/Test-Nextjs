@@ -1,0 +1,54 @@
+import { show_sort as sortObj } from "@lib/constant";
+import { convertGenresIntoId, refineGeneralData } from "@lib/refiner";
+import {
+  GeneralReturnType,
+  GeneralTMDBResponse,
+  SortOptions,
+} from "@type/external";
+import { NextRequest, NextResponse } from "next/server";
+
+export const GET = async (req: NextRequest) => {
+  const params = req.nextUrl.searchParams;
+  const sort: SortOptions = (params.get("sort") as SortOptions) || "popularity";
+  const sort_by = sortObj[sort] || sortObj.popularity;
+  const page = parseInt(params.get("p") || "1") || 1;
+  const year = params.get("y");
+  const genreParams = params.get("g");
+  const genres = genreParams ? convertGenresIntoId(genreParams, "show") : null;
+
+  const url = `https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=false&language=en-US&page=${page}&sort_by=${sort_by}
+    ${year ? `&first_air_date_year=${year}` : ""}
+    ${genres ? `&with_genres=${genres}` : ""}`;
+
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${process.env.TMDB_API}`,
+    },
+  };
+
+  try {
+    const data: GeneralTMDBResponse<GeneralReturnType> = await fetch(
+      url,
+      options
+    ).then((res) => res.json());
+
+    if (data.status_message)
+      return NextResponse.json({
+        status: false,
+        response: data.status_message,
+      });
+
+    return NextResponse.json({
+      status: true,
+      response: {
+        ...data.response,
+        results: refineGeneralData(data.response.results),
+      },
+    });
+  } catch (err: any) {
+    console.error(err);
+    return NextResponse.json({ status: false, response: err.message });
+  }
+};

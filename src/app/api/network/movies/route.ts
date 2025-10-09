@@ -1,12 +1,18 @@
-import { movie_sort_obj as sortObj } from "@/utils/Data";
-import { NextResponse } from "next/server";
+import { movie_sort as sortObj } from "@lib/constant";
+import { refineGeneralData } from "@lib/refiner";
+import {
+  GeneralReturnType,
+  GeneralTMDBResponse,
+  SortOptions,
+} from "@type/external";
+import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req) => {
+export const GET = async (req: NextRequest) => {
   const params = req.nextUrl.searchParams;
   const id = params.get("id");
-  const sort = params.get("sort") || "popularity";
+  const sort: SortOptions = (params.get("sort") as SortOptions) || "popularity";
   const sort_by = sortObj[sort] || sortObj.popularity;
-  const page = params.get("p") || 1;
+  const page = parseInt(params.get("p") || "1") || 1;
 
   if (!id)
     return NextResponse.json({
@@ -24,7 +30,10 @@ export const GET = async (req) => {
   };
 
   try {
-    const data = await (await fetch(url, options)).json();
+    const data: GeneralTMDBResponse<GeneralReturnType> = await fetch(
+      url,
+      options
+    ).then((res) => res.json());
 
     if (data.status_message)
       return NextResponse.json({
@@ -32,8 +41,14 @@ export const GET = async (req) => {
         response: data.status_message,
       });
 
-    return NextResponse.json({ status: true, response: data });
-  } catch (err) {
+    return NextResponse.json({
+      status: true,
+      response: {
+        ...data.response,
+        results: refineGeneralData(data.response.results),
+      },
+    });
+  } catch (err: any) {
     console.error(err);
     return NextResponse.json({ status: false, response: err.message });
   }

@@ -5,7 +5,7 @@ export const GET = async (res, { params: { username } }) => {
 
   try {
     const response = await fetch(
-      `https://coomer.su/api/v1/fansly/user/${username}/posts-legacy?o=${page}`,
+      `https://coomer.su/api/v1/fansly/user/${username}/posts?o=${page}`,
       { next: { revalidate: 0 } }
     ).then((res) => res.json());
 

@@ -79,17 +79,24 @@ export const POST = async () => {
     const ably = getAblyRest();
     await Promise.all(
       participants.map(async (clientId) => {
+        const title = `${clientId}! You've recieved a new message`;
+        const body = "Click here to open";
         return ably.push.admin.publish(
           { clientId },
           {
             notification: {
-              title: `${clientId}! You've recieved a new message`,
-              body: "Click here to open",
+              title,
+              body,
+              priority: "high",
               icon: "/android-chrome-192x192.png",
               collapseKey: clientId,
             },
             fcm: {
               notification: {
+                title: `${clientId}! You've recieved a new message`,
+                body: "Click here to open",
+                priority: "high",
+                icon: "/android-chrome-192x192.png",
                 color: "red",
               },
             },

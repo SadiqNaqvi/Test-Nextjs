@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 
 export const GET = async (res, { params: { username } }) => {
   const page = res.nextUrl.searchParams.get("o"); 
-
+  
   try {
     const response = await fetch(
-      `https://coomer.su/api/v1/onlyfans/user/${username}/posts-legacy?o=${page}`,
+      `https://coomer.st/api/v1/onlyfans/user/${username}/posts?o=${page}`,
       { next: { revalidate: 0 } }
     ).then((res) => res.json());
 
