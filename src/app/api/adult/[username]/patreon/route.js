@@ -5,14 +5,14 @@ export const GET = async (res, { params: { username } }) => {
 
   try {
     const [profile, posts] = await Promise.all([
-      fetch(
-        `https://kemono.su/api/v1/patreon/user/${username}/posts?o=${page}`,
-        { next: { revalidate: 0 }, headers: { Accept: "text/css" } }
-      ).then((res) => res.json()),
       fetch(`https://kemono.su/api/v1/patreon/user/${username}/profile`, {
         next: { revalidate: 0 },
         headers: { Accept: "text/css" },
       }).then((res) => res.json()),
+      fetch(
+        `https://kemono.su/api/v1/patreon/user/${username}/posts?o=${page}`,
+        { next: { revalidate: 0 }, headers: { Accept: "text/css" } }
+      ).then((res) => res.json()),
     ]);
 
     if (profile.error || posts.error)
