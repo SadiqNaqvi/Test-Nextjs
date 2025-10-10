@@ -11,7 +11,7 @@ export const POST = async (r: NextRequest) => {
 
   const apiKey = r.headers.get('authorization')?.split(' ')[1];
 
-  if (apiKey !=== process.env.MEDIA_UPLOAD_API_KEY)
+  if (apiKey !== process.env.MEDIA_UPLOAD_API_KEY)
   return NextResponse.json({ success: false, error: "Invalid API Key!" })
 
   try {
