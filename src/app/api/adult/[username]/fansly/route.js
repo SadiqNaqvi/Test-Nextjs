@@ -4,20 +4,31 @@ export const GET = async (res, { params: { username } }) => {
   const page = res.nextUrl.searchParams.get("o");
 
   try {
-    const response = await fetch(
-      `https://coomer.su/api/v1/fansly/user/${username}/posts?o=${page}`,
-      { next: { revalidate: 0 }, headers: { Accept: "text/css" } }
-    ).then((res) => res.json());
+    const [profile, posts] = await Promise.all([
+      fetch(
+        `https://coomer.st/api/v1/fansly/user/${username}/posts?o=${page}`,
+        { next: { revalidate: 0 }, headers: { Accept: "text/css" } }
+      ).then((res) => res.json()),
+      fetch(`https://coomer.st/api/v1/fansly/user/${username}/profile`, {
+        next: { revalidate: 0 },
+        headers: { Accept: "text/css" },
+      }).then((res) => res.json()),
+    ]);
 
-    if (response.error)
+    if (profile.error || posts.error)
       return NextResponse.json({
         result: null,
         success: false,
-        error: response.error,
+        error: profile.error || posts.error,
       });
 
     return NextResponse.json({
-      result: response,
+      result: {
+        name: profile.name,
+        service: profile.service,
+        post_count: profile.post_count,
+        posts,
+      },
       success: true,
       error: null,
     });
