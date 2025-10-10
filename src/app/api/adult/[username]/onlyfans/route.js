@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
 export const GET = async (res, { params: { username } }) => {
-  const page = res.nextUrl.searchParams.get("o"); 
-  
+  const page = res.nextUrl.searchParams.get("o");
+
   try {
     const response = await fetch(
       `https://coomer.st/api/v1/onlyfans/user/${username}/posts?o=${page}`,
-      { next: { revalidate: 0 } }
+      { next: { revalidate: 0 }, headers: { Accept: "text/css" } }
     ).then((res) => res.json());
 
     if (response.error)
