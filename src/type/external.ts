@@ -84,6 +84,12 @@ export type GeneralCollectionData = {
   backdrop_path: string | null;
 };
 
+export type GeneralGetReturn<T = unknown> = {
+  success: boolean,
+  error: string,
+  response: T | null
+}
+
 export type GeneralReturnType<T = any> = {
   results: T[];
   page: number;
@@ -588,10 +594,10 @@ export type SearchCompanyReturn = GeneralReturnType & {
 
 export type SearchPersonReturn = GeneralReturnType & {
   results: GeneralPersonData &
-    {
-      original_name: string;
-      known_for: GeneralMovieData[];
-    }[];
+  {
+    original_name: string;
+    known_for: GeneralMovieData[];
+  }[];
 };
 
 export type SortOptions = "popularity" | "rating" | "year" | "title";

@@ -60,7 +60,7 @@ export const convertGenresIntoId = (
 };
 
 const sortSearchData = (data: any[]) => {
-  if (!data[0].popularity) return data;
+  if (!data[0]?.popularity) return data;
   return data.sort((a: any, b: any) => b?.popularity - a?.popularity);
 };
 

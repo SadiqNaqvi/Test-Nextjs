@@ -1,6 +1,7 @@
 import { show_sort as sortObj } from "@lib/constant";
 import { convertGenresIntoId, refineGeneralData } from "@lib/refiner";
 import {
+  GeneralGetReturn,
   GeneralReturnType,
   GeneralTMDBResponse,
   SortOptions,
@@ -29,15 +30,16 @@ export const GET = async (req: NextRequest) => {
   };
 
   try {
-    const data: GeneralTMDBResponse<GeneralReturnType> = await fetch(
-      url,
-      options
-    ).then((res) => res.json());
+    const data: GeneralGetReturn<GeneralReturnType> =
+      await fetch(url, options)
+        .then((res) => res.json())
+        .then((res) => ({ response: res, error: "", success: true }))
+        .catch(err => ({ error: err.message, success: false, response: null }));
 
-    if (data.status_message)
+    if (!data.success || !data.response)
       return NextResponse.json({
         status: false,
-        response: data.status_message,
+        response: data.error,
       });
 
     return NextResponse.json({

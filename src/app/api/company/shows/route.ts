@@ -1,9 +1,9 @@
 import { show_sort as sortObj } from "@lib/constant";
 import { refineGeneralData } from "@lib/refiner";
 import {
+  GeneralGetReturn,
   GeneralReturnType,
-  GeneralTMDBResponse,
-  SortOptions,
+  SortOptions
 } from "@type/external";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -30,16 +30,17 @@ export const GET = async (req: NextRequest) => {
   };
 
   try {
-    const data: GeneralTMDBResponse<GeneralReturnType> = await fetch(
-      url,
-      options
-    ).then((res) => res.json());
-
-    if (data.status_message)
-      return NextResponse.json({
-        status: false,
-        response: data.status_message,
-      });
+    const data: GeneralGetReturn<GeneralReturnType> =
+          await fetch(url, options)
+            .then((res) => res.json())
+            .then((res) => ({ response: res, error: "", success: true }))
+            .catch(err => ({ error: err.message, success: false, response: null }));
+    
+        if (!data.success || !data.response)
+          return NextResponse.json({
+            status: false,
+            response: data.error,
+          });
 
     return NextResponse.json({
       status: true,
