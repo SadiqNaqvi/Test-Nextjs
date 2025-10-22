@@ -101,7 +101,7 @@ const ResponseSection = ({ error, loading, response }: { error: string, loading:
 
 const ApiTesterPage = () => {
 
-    const [paramsBlock, setParamsBlock] = useState(1);
+    // const [paramsBlock, setParamsBlock] = useState(1);
 
     const { error, loading, response, startQuery, } = useQuery();
 
@@ -113,7 +113,7 @@ const ApiTesterPage = () => {
 
         const target = encodeURIComponent(url);
 
-        startQuery(`http://localhost:3000/api/proxy?url=${target}`);
+        startQuery(`https://testlalaapp.vercel.app/api/proxy?url=${target}`);
     }
 
     return (
