@@ -1,6 +1,8 @@
 "use client";
 
+import { useQuery } from "@lib/hook";
 import { useState } from "react";
+import { isCorrectURL } from "@lib/utils"
 
 import React from 'react';
 
@@ -28,15 +30,15 @@ const JsonViewer = ({ json }: JsonViewerProps) => {
             const count = isArray ? data.length : Object.keys(data).length;
 
             return (
-                <div style={{ marginLeft: '20px', marginBlock: "8px" }}>
+                <div style={{ marginLeft: '10px', marginBlock: "6px" }}>
                     <details>
                         <summary style={{ fontWeight: 'bold', cursor: 'pointer' }}>
-                            {key && <span style={{ color: '#9cdcfe' }}>{key}</span>}
+                            {key && <span style={{ color: '#9cdcfe' }}>{key} : {' '}</span>}
                             <span style={{ color: '#dcdcaa' }}>
-                                : {isObject ? `Object (${count} keys)` : `Array (${count} elements)`}
+                                {isObject ? `Object (${count} keys)` : `Array (${count} elements)`}
                             </span>
                         </summary>
-                        <div style={{ marginLeft: '20px', borderLeft: "1px solid gray" }}>
+                        <div style={{ marginLeft: '10px', borderLeft: "1px solid gray" }}>
                             {isArray &&
                                 data.map((item, index) => (
                                     <div key={index}>{renderJson(item, index.toString())}</div>
@@ -53,10 +55,9 @@ const JsonViewer = ({ json }: JsonViewerProps) => {
 
         // Otherwise, it's a simple primitive value
         return (
-            <div style={{ marginLeft: '20px' }}>
-                {key && <span style={{ color: '#9cdcfe' }}>{key}</span>}
+            <div style={{ marginLeft: '10px' }}>
+                {key && <span style={{ color: '#9cdcfe' }}>{key} :{' '}</span>}
                 <span style={{ color: '#d4d4d4' }}>
-                    :{' '}
                     <span style={{ color: getValueColor(data) }}>
                         {JSON.stringify(data)}
                     </span>{' '}
@@ -69,33 +70,63 @@ const JsonViewer = ({ json }: JsonViewerProps) => {
     return <div>{renderJson(json)}</div>;
 };
 
+const ResponseSection = ({ error, loading, response }: { error: string, loading: boolean, response: any }) => {
+
+    if (loading) return (
+        <section className="mt-4">
+            <p className="text-center">Loading, Please wait...</p>
+        </section>
+    )
+
+    else if (error) return (
+        <section className="mt-4 text-center">
+            <h4 className="text-lg font-semibold mb-4">Oops! Some Error Occured</h4>
+            <p>{error}</p>
+        </section>
+
+    )
+
+    else if (!response) return (
+        <section className="mt-4">
+            <p className="text-center">Enter URL to test</p>
+        </section>
+    )
+
+    return (
+        <section className="mt-4">
+            <JsonViewer json={response} />
+        </section>
+    )
+}
+
 const ApiTesterPage = () => {
 
-    const [response, setResponse] = useState<any>();
+    const [paramsBlock, setParamsBlock] = useState(1);
+
+    const { error, loading, response, startQuery, } = useQuery();
 
     const fetchResponse = (data: FormData) => {
         const url = data.get("url")?.toString();
-
         if (!url || url.length < 10) return;
 
-        fetch(url)
-            .then(r => r.json())
-            .then(setResponse)
-            .catch((e: any) => setResponse(`Error: ${e.message}`))
+        else if (!isCorrectURL(url, true)) return;
+
+        const target = encodeURIComponent(url);
+
+        startQuery(`http://localhost:3000/api/proxy?url=${target}`);
     }
 
     return (
         <>
-            <form action={fetchResponse} className="max-w-sm flex gap-4 flex-col mx-auto mt-32">
+            <form action={fetchResponse} className="flex gap-4 mx-auto mt-4 px-4">
 
                 <input name="url" className="p-2 rounded-md border-2 border-gray-500 w-full" />
 
                 <button type="submit" className="px-4 py-2 rounded-md bg-zinc-100 text-black">Test</button>
 
             </form>
-            {response && (
-                <JsonViewer json={response} />
-            )}
+
+            <ResponseSection error={error} loading={loading} response={response} />
         </>
     )
 

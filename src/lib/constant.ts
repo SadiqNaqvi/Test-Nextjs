@@ -55,3 +55,9 @@ export const show_sort = {
   year: "first_air_date.desc",
   title: "name.asc",
 };
+
+export const urlPattern =
+  /^https:\/\/(www\.)?[a-zA-Z0-9-]{2,}(\.[a-zA-Z0-9-]{2,})+(\/[^\s]*)?(\?[^\s]*)?$/;
+
+export const mediaUrlPattern =
+  /^(https:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-%.~+\/]*)*(\.(jpg|jpeg|png|bmp|webp|mp4|mov|avi|mkv|flv|wmv|webm|3gp))(?=[\/?]|$)/i;

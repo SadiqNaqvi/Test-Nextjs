@@ -1,3 +1,5 @@
+import { urlPattern, mediaUrlPattern } from "@lib/constant"
+
 export const objectToFormData = (
   object: Record<string, any>
 ): FormData | null => {
@@ -98,4 +100,12 @@ export async function decryptData<T>(
   );
 
   return JSON.parse(decoder.decode(decrypted)) as T;
+}
+
+export const isCorrectURL = (url: string, allowLocalHost: boolean) => {
+  if (!url) return false;
+  else if (urlPattern.test(url)) return true;
+  else if (mediaUrlPattern.test(url)) return true;
+  else if (allowLocalHost && /^http:\/\/localhost(:\d+)?(\/[^\s]*)?$/.test(url)) return true;
+  return false;
 }
