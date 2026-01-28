@@ -4,7 +4,6 @@ import { useQuery } from "@lib/hook";
 import { useState } from "react";
 import { isCorrectURL } from "@lib/utils"
 import JsonViewer from "@Components/JsonViewer";
-import { isCorrectURL } from "@lib/utils";
 
 import React from 'react';
 
