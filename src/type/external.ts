@@ -57,6 +57,7 @@ export type GeneralContent = {
   original_language: string;
   overview: string;
   popularity: number;
+  
   poster_path: string | null;
   vote_average: number;
   vote_count: number;
@@ -529,7 +530,7 @@ export type RefinedGeneralContentData = {
   title: string;
 };
 
-export type PersonWork = RefinedGeneralContentData & {
+export type PersonWork = RefinedGeneralData  & {
   worked_as: string;
 };
 
