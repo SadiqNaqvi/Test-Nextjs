@@ -1,5 +1,15 @@
 import { formDataToObject } from "@lib/utils";
+import { Storage } from "megajs";
 import { NextRequest, NextResponse } from "next/server";
+import path from "path"
+
+type ResponseType = ({
+  success: false;
+  key: undefined;
+} | {
+  success: true;
+  key: string;
+})
 
 export const POST = async (r: NextRequest) => {
   const data = formDataToObject(await r.formData()) as { files: File | File[] };
@@ -9,67 +19,36 @@ export const POST = async (r: NextRequest) => {
   if (!files || !files.length)
     return Response.json({ success: false, error: "Missing Files" }, { status: 400 });
 
-  const apiKey = r.headers.get('authorization')?.split(' ')[1];
+  const authorizationHeader = r.headers.get('authorization') || r.headers.get('Authorization')
+  const apiKey = authorizationHeader?.split(' ')[1];
 
   if (apiKey !== process.env.MEDIA_UPLOAD_API_KEY)
-  return NextResponse.json({ success: false, error: "Invalid API Key!" })
+    return NextResponse.json({ success: false, error: "Invalid API Key!" });
 
   try {
-    const response: ({
-      success: false;
-      file_name: string;
-      error: string;
-      url: undefined;
-    } | {
-      success: true;
-      url: string;
-      file_name: string;
-      error: undefined;
-    })[] = await Promise.all(
+
+    const storage = await new Storage({
+      autologin: true,
+    }).ready;
+
+    const response: ResponseType[] = await Promise.all(
       Array.from(files).map(async (file) => {
         const { size, name } = file;
+        try {
+          const fileBuff = await file.arrayBuffer();
+          // Step 1: Get pre-signed upload URL
+          const uploadedFile = await storage.upload({ name, size }, Buffer.from(fileBuff)).complete;
 
-        // Step 1: Get pre-signed upload URL
-        const presignResp = await fetch(
-          "https://ranoz.gg/api/v1/files/upload_url",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ filename: name, size }),
-          }
-        );
+          const link = await uploadedFile.link({ key: uploadedFile.key?.toString() });
+          const key = link.split("/file/")[1].split("#").join("-");
 
-        if (!presignResp.ok) {
-          return {
-            success: false,
-            file_name: name,
-            error: await presignResp.text(),
-          };
+          const ext = path.extname(name);
+
+          return { success: true, key: key.concat(ext) };
+        } catch (err: any) {
+          console.error("File upload failed:", err.message);
+          return { success: false, key: undefined }
         }
-
-        const {
-          data: { upload_url, filename, id },
-        } = await presignResp.json();
-
-        const uploadResp = await fetch(upload_url, {
-          method: "PUT",
-          body: await file.arrayBuffer(),
-        });
-
-        if (!uploadResp.ok) {
-          return {
-            success: false,
-            file_name: name,
-            error: "Something went wrong during file upload",
-          };
-        }
-        const storage = upload_url.split(".")[0].split("/").at(-1);
-
-        return {
-          success: true,
-          url: `${storage}-${id}-${filename}`,
-          file_name: name,
-        };
       })
     );
 
