@@ -529,7 +529,7 @@ export type RefinedGeneralContentData = {
   title: string;
 };
 
-export type PersonWork = RefinedGeneralData & {
+export type PersonWork = RefinedGeneralContentData & {
   worked_as: string;
 };
 

@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config) => {
-    config.externals.push("ffmpeg-static");
-    return config;
-  },
   async headers() {
     return [
       {

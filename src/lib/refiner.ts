@@ -214,11 +214,11 @@ export const refineMovieData = (
 
   const updatedCollection: RefinedCollection | null = belongs_to_collection
     ? {
-      id: String(belongs_to_collection.id),
-      name: belongs_to_collection.name,
-      poster: belongs_to_collection.poster_path || "",
-      backdrop: belongs_to_collection.backdrop_path || "",
-    }
+        id: String(belongs_to_collection.id),
+        name: belongs_to_collection.name,
+        poster: belongs_to_collection.poster_path || "",
+        backdrop: belongs_to_collection.backdrop_path || "",
+      }
     : null;
 
   const updatedVideos = refineTrailers(videos);
@@ -452,7 +452,6 @@ export const refineEpisodeData = (
 export const refinePersonData = (
   person: FullPersonDetails
 ): RefinedPersonData => {
-
   const {
     biography,
     birthday,
@@ -471,28 +470,28 @@ export const refinePersonData = (
   const refineCredits = (
     credit: typeof cast | typeof crew,
     type: string
-  ): (RefinedGeneralData & { worked_as: string })[] => {
-
-    const newCredit: (RefinedGeneralData & { worked_as: string })[] = credit
+  ): PersonWork[] =>
+    credit
       .sort((a, b) => b.popularity - a.popularity)
-      .filter(c => c.media_type)
       .map((el) => ({
-        id: el.id.toString(),
-        type: el.media_type === "tv" ? "show" : "movie",
+        backdrop: el.backdrop_path || "",
+        tmdb_id: el.id.toString(),
+        media_type: el.media_type
+          ? el.media_type === "tv"
+            ? "show"
+            : el.media_type
+          : "",
+        overview: el.overview,
         poster: el.poster_path || "",
-        rating: String(refineRating(el.vote_average)),
+        rating: refineRating(el.vote_average),
         title: (el.name as string) || (el.title as string),
         worked_as: type === "cast" ? el.character : el.job,
-        year: el.release_date
-          ? new Date(el.release_date).getFullYear()
-          : new Date(el.first_air_date).getFullYear(),
-      }));
+        release_date: el.release_date
+          ? new Date(el.release_date).getTime()
+          : new Date(el.first_air_date).getTime(),
+      }))
+      .filter((el) => new Date(el.release_date) < new Date());
 
-    const creditMap = new Map(newCredit.map(credit => [credit.id, credit]));
-
-    return Array.from(creditMap.entries()).map(([_, c]) => c);
-  }
-  
   const refinedCast = refineCredits(
     cast.filter((el) => !el.character.toLowerCase().includes("self")),
     "cast"
@@ -530,7 +529,7 @@ export const refineCollectionData = (
     overview,
     rating: refineRating(
       refinedParts.reduce((prev, el) => prev + el.rating, 0) /
-      refinedParts.length
+        refinedParts.length
     ),
     parts: refinedParts,
     poster: poster_path || "",
