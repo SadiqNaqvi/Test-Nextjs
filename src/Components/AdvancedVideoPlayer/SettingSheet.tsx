@@ -49,6 +49,10 @@ const Sections = ({ close }: { close: TypedFunction }) => {
     const [section, setSection] = useState<"sheet" | "playback">("sheet");
     const { videoRef, setScreenLock, fullScreen, playbackRate, setPlaybackRate } = useGlobalOptions();
 
+    useEffect(() => {
+        if (!fullScreen) close();
+    }, [fullScreen])
+    
     if (!videoRef.current) return;
 
     const handleClick = (action: "screenshot" | "lock" | "speed" | "pip") => {
@@ -67,10 +71,6 @@ const Sections = ({ close }: { close: TypedFunction }) => {
         close();
 
     }
-
-    useEffect(() => {
-        if (!fullScreen) close();
-    }, [fullScreen])
 
     const sheetOptions = [
         { label: "Screenshot", icon: <CameraIcon size="size-5" />, onClick: () => handleClick("screenshot"), hasNesting: false },
