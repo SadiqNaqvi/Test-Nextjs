@@ -170,13 +170,13 @@ export const refineGeneralContent = (
       backdrop: el.backdrop_path || "",
       overview: el.overview,
       poster: el.poster_path || "",
-      rating: refineRating(el.vote_average),
+      rating: String(refineRating(el.vote_average)),
       title: el.title || el.name,
-      tmdb_id: el.id.toString(),
-      media_type: el.media_type,
-      release_date: el.release_date
-        ? new Date(el.release_date).getTime()
-        : new Date(el.first_air_date).getTime(),
+      id: el.id.toString(),
+      type: el.media_type,
+      year: el.release_date
+        ? new Date(el.release_date).getFullYear()
+        : new Date(el.first_air_date).getFullYear(),
     }));
 };
 
@@ -475,6 +475,8 @@ export const refinePersonData = (
       .sort((a, b) => b.popularity - a.popularity)
       .filter(c => c.media_type)
       .map(el => ({
+        backdrop: el.backdrop_path || '',
+        overview: el.overview,
         id: el.id.toString(),
         type: el.media_type === "tv" ? "show" : "movie",
         poster: el.poster_path || "",
@@ -491,29 +493,29 @@ export const refinePersonData = (
     return Array.from(creditMap.entries()).map(([_, c]) => c);
   }
 
-const refinedCast = refineCredits(
-  cast.filter((el) => !el.character.toLowerCase().includes("self")),
-  "cast"
-);
+  const refinedCast = refineCredits(
+    cast.filter((el) => !el.character.toLowerCase().includes("self")),
+    "cast"
+  );
 
-return {
-  biography,
-  birth: new Date(birthday).getTime(),
-  credits: {
-    cast: refinedCast,
-    crew: refineCredits(crew, "crew"),
-  },
-  death: deathday ? new Date(deathday).getTime() : null,
-  department: known_for_department,
-  gender,
-  imdb_id,
-  links: homepage ? [{ label: "homepage", value: homepage }] : [],
-  name,
-  place_of_birth,
-  place_of_death: "",
-  profile: profile_path || "",
-  tmdb_id: id.toString(),
-};
+  return {
+    biography,
+    birth: new Date(birthday).getTime(),
+    credits: {
+      cast: refinedCast,
+      crew: refineCredits(crew, "crew"),
+    },
+    death: deathday ? new Date(deathday).getTime() : null,
+    department: known_for_department,
+    gender,
+    imdb_id,
+    links: homepage ? [{ label: "homepage", value: homepage }] : [],
+    name,
+    place_of_birth,
+    place_of_death: "",
+    profile: profile_path || "",
+    tmdb_id: id.toString(),
+  };
 };
 
 export const refineCollectionData = (
@@ -527,7 +529,7 @@ export const refineCollectionData = (
     backdrop: backdrop_path || "",
     overview,
     rating: refineRating(
-      refinedParts.reduce((prev, el) => prev + el.rating, 0) /
+      refinedParts.reduce((prev, el) => prev + Number(el.rating), 0) /
       refinedParts.length
     ),
     parts: refinedParts,

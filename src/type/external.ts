@@ -57,7 +57,7 @@ export type GeneralContent = {
   original_language: string;
   overview: string;
   popularity: number;
-  
+
   poster_path: string | null;
   vote_average: number;
   vote_count: number;
@@ -519,18 +519,12 @@ export type RefinedGeneralData = {
   type: "movie" | "show";
 };
 
-export type RefinedGeneralContentData = {
+export type RefinedGeneralContentData = RefinedGeneralData & {
   backdrop: string;
-  tmdb_id: string;
-  media_type?: string;
   overview: string;
-  poster: string;
-  rating: number;
-  release_date: number;
-  title: string;
 };
 
-export type PersonWork = RefinedGeneralData  & {
+export type PersonWork = RefinedGeneralContentData & {
   worked_as: string;
 };
 
