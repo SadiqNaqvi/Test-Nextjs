@@ -24,6 +24,7 @@ export const GET = async (req: NextRequest) => {
       accept: "application/json",
       Authorization: `Bearer ${process.env.TMDB_API}`,
     },
+    cache: "no-cache",
   };
 
   try {

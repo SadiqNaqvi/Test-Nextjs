@@ -6,7 +6,7 @@ export const GET = async (req: NextRequest) => {
   const params = req.nextUrl.searchParams;
   const query = params.get("q");
   const page = parseInt(params.get("p") || "1") || 1;
-  const type = params.get("t") || "multi"; //collection | company | movie | person | show | cinements
+  const type = params.get("t") || "multi"; //collection | company | movie | person | show | taleons
 
   if (!query)
     return NextResponse.json({
@@ -14,14 +14,14 @@ export const GET = async (req: NextRequest) => {
       response: "Invalid Query!",
     });
 
-  const url = `https://api.themoviedb.org/3/search/${type === "cinements" ? "multi" : type
-    }?query=${query}&include_adult=false&language=en-US&page=${page}`;
+  const url = `https://api.themoviedb.org/3/search/${type === "taleons" ? "multi" : type}?query=${query}&include_adult=false&language=en-US&page=${page}`;
   const options = {
     method: "GET",
     headers: {
       accept: "application/json",
       Authorization: `Bearer ${process.env.TMDB_API}`,
     },
+    cache: "no-cache",
   };
 
   try {
@@ -42,7 +42,7 @@ export const GET = async (req: NextRequest) => {
       response: {
         ...data.response,
         results:
-          type === "cinements"
+          type === "taleons"
             ? refineMediaItemsFromSearch(data.response.results)
             : refineSearchData(
               data.response.results,

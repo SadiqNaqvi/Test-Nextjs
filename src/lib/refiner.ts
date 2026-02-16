@@ -77,7 +77,7 @@ export const refineSearchData = (
   }));
 };
 
-type searchResult = {
+type SearchResult = {
   title: string;
   name: string;
   id: string;
@@ -88,9 +88,9 @@ type searchResult = {
   known_for: [];
 };
 
-type SearchData = searchResult & {
+type SearchData = SearchResult & {
   media_type: "person";
-  known_for: searchResult[];
+  known_for: SearchResult[];
 };
 
 export const refineMediaItemsFromSearch = (
